@@ -1,6 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import imgAdventure from "@/assets/story/db-adventure.jpg";
+import imgRedRibbon from "@/assets/story/db-redribbon.jpg";
+import imgPiccoloDaimao from "@/assets/story/db-piccolo-daimao.jpg";
+import imgBudokai from "@/assets/story/db-budokai.jpg";
+import imgSaiyajin from "@/assets/story/dbz-saiyajin.jpg";
+import imgNamek from "@/assets/story/dbz-namek.jpg";
+import imgCell from "@/assets/story/dbz-cell.jpg";
+import imgBuu from "@/assets/story/dbz-buu.jpg";
+import imgBills from "@/assets/story/dbs-bills.jpg";
+import imgGoldenFreezer from "@/assets/story/dbs-golden-freezer.jpg";
+import imgTournament from "@/assets/story/dbs-tournament.jpg";
+
 interface TimelineEvent {
   year: string;
   saga: string;
@@ -8,6 +20,7 @@ interface TimelineEvent {
   description: string;
   color: string;
   icon: string;
+  image: string;
 }
 
 const timeline: TimelineEvent[] = [
@@ -18,6 +31,7 @@ const timeline: TimelineEvent[] = [
     description: "Goku conoce a Bulma y juntos inician la búsqueda de las Esferas del Dragón. Goku entrena con el Maestro Roshi y participa en el Torneo de Artes Marciales.",
     color: "hsl(20 94% 54%)",
     icon: "🐉",
+    image: imgAdventure,
   },
   {
     year: "Año 750",
@@ -26,6 +40,7 @@ const timeline: TimelineEvent[] = [
     description: "Goku se enfrenta solo al Ejército de la Red Ribbon para recuperar las esferas. Conoce a Krillin, Yamcha y otros aliados que serán clave en el futuro.",
     color: "hsl(0 70% 50%)",
     icon: "🎖️",
+    image: imgRedRibbon,
   },
   {
     year: "Año 753",
@@ -34,6 +49,7 @@ const timeline: TimelineEvent[] = [
     description: "Piccolo Daimaō aterroriza la Tierra. Krillin es asesinado, despertando la furia de Goku. Tras una batalla épica, Goku derrota a Piccolo pero su hijo renace.",
     color: "hsl(140 60% 35%)",
     icon: "👹",
+    image: imgPiccoloDaimao,
   },
   {
     year: "Año 756",
@@ -42,6 +58,7 @@ const timeline: TimelineEvent[] = [
     description: "Goku, ya adulto, se enfrenta a Piccolo Jr. en la final del torneo. Gana el combate y se casa con Chi-Chi, cerrando la era de Dragon Ball.",
     color: "hsl(280 60% 50%)",
     icon: "🏆",
+    image: imgBudokai,
   },
   {
     year: "Año 761",
@@ -50,6 +67,7 @@ const timeline: TimelineEvent[] = [
     description: "Raditz llega a la Tierra revelando el origen Saiyajin de Goku. Goku se sacrifica para derrotarlo. Un año después, Vegeta y Nappa invaden la Tierra.",
     color: "hsl(215 100% 34%)",
     icon: "🛸",
+    image: imgSaiyajin,
   },
   {
     year: "Año 762",
@@ -58,6 +76,7 @@ const timeline: TimelineEvent[] = [
     description: "Los guerreros Z viajan a Namek para revivir a sus amigos. Se enfrentan a Freezer, el tirano del universo. Goku se transforma en Super Saiyajin por primera vez.",
     color: "hsl(53 99% 57%)",
     icon: "💛",
+    image: imgNamek,
   },
   {
     year: "Año 764",
@@ -66,6 +85,7 @@ const timeline: TimelineEvent[] = [
     description: "Trunks del futuro advierte sobre los Androides 17 y 18. Cell aparece como la amenaza definitiva. Gohan despierta su poder oculto y derrota a Cell como Super Saiyajin 2.",
     color: "hsl(250 60% 55%)",
     icon: "⚔️",
+    image: imgCell,
   },
   {
     year: "Año 774",
@@ -74,6 +94,7 @@ const timeline: TimelineEvent[] = [
     description: "El mago Babidi libera a Majin Buu. Vegeta se sacrifica. Goku alcanza el Super Saiyajin 3. La fusión y el Genkidama definitivo salvan al universo.",
     color: "hsl(330 70% 55%)",
     icon: "💥",
+    image: imgBuu,
   },
   {
     year: "Año 778",
@@ -82,6 +103,7 @@ const timeline: TimelineEvent[] = [
     description: "Bills, el Dios de la Destrucción, despierta buscando al Super Saiyajin Dios. Goku alcanza esta transformación con la ayuda de sus amigos Saiyajins.",
     color: "hsl(0 80% 55%)",
     icon: "🔴",
+    image: imgBills,
   },
   {
     year: "Año 779",
@@ -90,6 +112,7 @@ const timeline: TimelineEvent[] = [
     description: "Freezer es revivido y entrena por primera vez, alcanzando su forma Golden. Goku y Vegeta dominan el Super Saiyajin Blue con el entrenamiento de Whis.",
     color: "hsl(200 90% 50%)",
     icon: "🧊",
+    image: imgGoldenFreezer,
   },
   {
     year: "Año 780",
@@ -98,6 +121,7 @@ const timeline: TimelineEvent[] = [
     description: "Zeno-sama organiza un torneo entre universos donde el perdedor es borrado de la existencia. Goku despierta el Ultra Instinto y salva al Universo 7.",
     color: "hsl(210 20% 60%)",
     icon: "✨",
+    image: imgTournament,
   },
 ];
 
@@ -173,38 +197,53 @@ const Story = () => {
                 >
                   <button
                     onClick={() => setExpandedIndex(isExpanded ? null : index)}
-                    className="manga-card p-4 md:p-5 w-full text-left cursor-pointer group"
+                    className="manga-card p-0 w-full text-left cursor-pointer group overflow-hidden"
                   >
-                    {/* Year badge */}
-                    <div
-                      className="inline-block px-3 py-1 border-2 border-foreground text-xs font-display tracking-wider mb-2"
-                      style={{ backgroundColor: event.color, color: "#fff" }}
-                    >
-                      {event.year}
+                    {/* Image */}
+                    <div className="relative w-full h-32 md:h-40 overflow-hidden">
+                      <img
+                        src={event.image}
+                        alt={event.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        loading="lazy"
+                        width={768}
+                        height={512}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+                      {/* Year badge on image */}
+                      <div
+                        className="absolute top-3 left-3 px-3 py-1 border-2 border-foreground text-xs font-display tracking-wider"
+                        style={{ backgroundColor: event.color, color: "#fff" }}
+                      >
+                        {event.year}
+                      </div>
                     </div>
 
-                    <div className="flex items-start gap-3">
-                      <span className="text-2xl md:text-3xl shrink-0">{event.icon}</span>
-                      <div className="flex-1">
-                        <div className="font-display text-xs text-muted-foreground tracking-wider mb-1">
-                          {event.saga.toUpperCase()}
-                        </div>
-                        <h3 className="font-display text-lg md:text-xl text-foreground leading-tight">
-                          {event.title}
-                        </h3>
+                    {/* Text content */}
+                    <div className="p-4 md:p-5">
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl md:text-3xl shrink-0">{event.icon}</span>
+                        <div className="flex-1">
+                          <div className="font-display text-xs text-muted-foreground tracking-wider mb-1">
+                            {event.saga.toUpperCase()}
+                          </div>
+                          <h3 className="font-display text-lg md:text-xl text-foreground leading-tight">
+                            {event.title}
+                          </h3>
 
-                        <div
-                          className={`overflow-hidden transition-all duration-300 ${
-                            isExpanded ? "max-h-40 mt-3 opacity-100" : "max-h-0 opacity-0"
-                          }`}
-                        >
-                          <p className="font-body text-sm text-muted-foreground leading-relaxed">
-                            {event.description}
-                          </p>
-                        </div>
+                          <div
+                            className={`overflow-hidden transition-all duration-300 ${
+                              isExpanded ? "max-h-40 mt-3 opacity-100" : "max-h-0 opacity-0"
+                            }`}
+                          >
+                            <p className="font-body text-sm text-muted-foreground leading-relaxed">
+                              {event.description}
+                            </p>
+                          </div>
 
-                        <div className="font-display text-xs text-primary mt-2">
-                          {isExpanded ? "▲ CERRAR" : "▼ LEER MÁS"}
+                          <div className="font-display text-xs text-primary mt-2">
+                            {isExpanded ? "▲ CERRAR" : "▼ LEER MÁS"}
+                          </div>
                         </div>
                       </div>
                     </div>
