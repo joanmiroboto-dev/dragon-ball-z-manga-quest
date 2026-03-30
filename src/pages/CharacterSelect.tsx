@@ -35,11 +35,14 @@ const CharacterSelect = () => {
               onClick={() => handleSelect(char.id)}
               className="manga-card p-4 md:p-6 text-center group cursor-pointer"
             >
-              <div
-                className="text-5xl md:text-7xl mb-3 transition-transform group-hover:scale-110"
-              >
-                {char.emoji}
-              </div>
+              <img
+                src={char.image}
+                alt={char.name}
+                className="w-20 h-20 md:w-28 md:h-28 object-contain mb-3 transition-transform group-hover:scale-110"
+                loading="lazy"
+                width={512}
+                height={512}
+              />
               <h2 className="font-display text-xl md:text-2xl text-foreground mb-1">
                 {char.name}
               </h2>
