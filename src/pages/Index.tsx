@@ -42,7 +42,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
             <button
               onClick={() => navigate("/select")}
               className="manga-btn bg-primary text-primary-foreground text-xl md:text-2xl px-8 py-4"
@@ -54,6 +54,12 @@ const Index = () => {
               className="manga-btn bg-secondary text-secondary-foreground text-lg md:text-xl"
             >
               📖 GUERREROS Z
+            </button>
+            <button
+              onClick={() => navigate("/story")}
+              className="manga-btn bg-accent text-accent-foreground text-lg md:text-xl"
+            >
+              📜 HISTORIA
             </button>
           </div>
         </div>
