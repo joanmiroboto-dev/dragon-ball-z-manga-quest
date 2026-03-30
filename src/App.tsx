@@ -8,6 +8,7 @@ import CharacterSelect from "./pages/CharacterSelect.tsx";
 import CharacterGallery from "./pages/CharacterGallery.tsx";
 import TriviaGame from "./pages/TriviaGame.tsx";
 import Results from "./pages/Results.tsx";
+import Story from "./pages/Story.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
