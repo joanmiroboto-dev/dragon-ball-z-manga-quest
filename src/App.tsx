@@ -24,6 +24,7 @@ const App = () => (
           <Route path="/select" element={<CharacterSelect />} />
           <Route path="/characters" element={<CharacterGallery />} />
           <Route path="/trivia/:characterId" element={<TriviaGame />} />
+          <Route path="/story" element={<Story />} />
           <Route path="/results/:characterId/:score" element={<Results />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
