@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { characters } from "@/data/characters";
 import { getRandomQuestions, type Question } from "@/data/questions";
+import { playSelect, playCorrect, playWrong, playNext, playKiCharge } from "@/lib/retro-sounds";
 
 const TriviaGame = () => {
   const { characterId } = useParams<{ characterId: string }>();
@@ -15,26 +16,39 @@ const TriviaGame = () => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [kiAnimation, setKiAnimation] = useState(false);
+  const [kiParticles, setKiParticles] = useState(false);
+  const [screenFlash, setScreenFlash] = useState(false);
 
   const currentQuestion = questions[currentIndex];
 
   const handleAnswer = useCallback(
     (optionIndex: number) => {
       if (showFeedback) return;
+      playSelect();
       const correct = optionIndex === currentQuestion.correctIndex;
       setSelectedOption(optionIndex);
       setIsCorrect(correct);
       setShowFeedback(true);
+
       if (correct) {
         setScore((s) => s + 1);
         setKiAnimation(true);
+        setKiParticles(true);
+        setScreenFlash(true);
+        setTimeout(() => playCorrect(), 100);
+        setTimeout(() => playKiCharge(), 250);
+      } else {
+        playWrong();
       }
     },
     [showFeedback, currentQuestion]
   );
 
   const handleNext = useCallback(() => {
+    playNext();
     setKiAnimation(false);
+    setKiParticles(false);
+    setScreenFlash(false);
     if (currentIndex + 1 >= questions.length) {
       navigate(`/results/${characterId}/${score + (isCorrect ? 0 : 0)}`, {
         state: { score: score, total: questions.length },
@@ -49,18 +63,54 @@ const TriviaGame = () => {
 
   useEffect(() => {
     if (kiAnimation) {
-      const t = setTimeout(() => setKiAnimation(false), 1500);
+      const t = setTimeout(() => setKiAnimation(false), 2000);
       return () => clearTimeout(t);
     }
   }, [kiAnimation]);
+
+  useEffect(() => {
+    if (screenFlash) {
+      const t = setTimeout(() => setScreenFlash(false), 400);
+      return () => clearTimeout(t);
+    }
+  }, [screenFlash]);
+
+  useEffect(() => {
+    if (kiParticles) {
+      const t = setTimeout(() => setKiParticles(false), 2000);
+      return () => clearTimeout(t);
+    }
+  }, [kiParticles]);
 
   if (!currentQuestion) return null;
 
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-background halftone-bg px-4 py-6 flex flex-col">
-      <div className="max-w-2xl mx-auto w-full flex-1 flex flex-col">
+    <div className={`min-h-screen bg-background halftone-bg px-4 py-6 flex flex-col relative overflow-hidden ${screenFlash ? "animate-screen-flash" : ""}`}>
+      {/* Ki particles overlay */}
+      {kiParticles && (
+        <div className="fixed inset-0 pointer-events-none z-40">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-ki-particle rounded-full"
+              style={{
+                width: `${6 + Math.random() * 10}px`,
+                height: `${6 + Math.random() * 10}px`,
+                left: `${30 + Math.random() * 40}%`,
+                top: `${40 + Math.random() * 30}%`,
+                background: character.color,
+                boxShadow: `0 0 ${8 + Math.random() * 12}px ${character.color}`,
+                animationDelay: `${i * 0.08}s`,
+                animationDuration: `${0.6 + Math.random() * 0.8}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className="max-w-2xl mx-auto w-full flex-1 flex flex-col relative z-10">
         {/* Top bar */}
         <div className="flex items-center justify-between mb-4">
           <button
@@ -70,10 +120,16 @@ const TriviaGame = () => {
             ✕ SALIR
           </button>
           <div className="font-display text-lg text-foreground flex items-center gap-2">
-            <img src={character.image} alt={character.name} className="w-8 h-8 object-contain" width={512} height={512} />
+            <img
+              src={character.image}
+              alt={character.name}
+              className={`w-8 h-8 object-contain transition-all duration-300 ${kiAnimation ? "animate-character-power" : ""}`}
+              width={512}
+              height={512}
+            />
             {character.name}
           </div>
-          <div className="font-display text-lg text-primary">
+          <div className={`font-display text-lg text-primary transition-transform ${showFeedback && isCorrect ? "animate-score-pop" : ""}`}>
             ⭐ {score}/{questions.length}
           </div>
         </div>
@@ -90,8 +146,8 @@ const TriviaGame = () => {
         </div>
 
         {/* Character speech */}
-        <div className={`mb-6 ${kiAnimation ? "animate-power-up" : ""}`}>
-          <div className="speech-bubble">
+        <div className={`mb-6 transition-all duration-300 ${kiAnimation ? "animate-power-up" : ""}`}>
+          <div className={`speech-bubble ${showFeedback ? (isCorrect ? "animate-bubble-correct" : "animate-bubble-wrong") : ""}`}>
             {showFeedback
               ? isCorrect
                 ? character.correctPhrase
@@ -111,10 +167,10 @@ const TriviaGame = () => {
 
           <div className="grid gap-3">
             {currentQuestion.options.map((option, i) => {
-              let btnStyle = "bg-card text-foreground border-foreground";
+              let btnStyle = "bg-card text-foreground border-foreground hover:bg-muted";
               if (showFeedback) {
                 if (i === currentQuestion.correctIndex) {
-                  btnStyle = "bg-accent text-accent-foreground border-foreground";
+                  btnStyle = "bg-accent text-accent-foreground border-foreground animate-correct-glow";
                 } else if (i === selectedOption && !isCorrect) {
                   btnStyle = "bg-destructive text-destructive-foreground border-foreground animate-shake";
                 }
@@ -125,7 +181,7 @@ const TriviaGame = () => {
                   key={i}
                   onClick={() => handleAnswer(i)}
                   disabled={showFeedback}
-                  className={`manga-btn text-left text-base md:text-lg ${btnStyle} w-full disabled:cursor-default`}
+                  className={`manga-btn text-left text-base md:text-lg ${btnStyle} w-full disabled:cursor-default transition-all duration-150`}
                 >
                   <span className="font-display mr-2">
                     {String.fromCharCode(65 + i)}.
@@ -137,12 +193,39 @@ const TriviaGame = () => {
           </div>
         </div>
 
-        {/* Ki animation overlay */}
+        {/* Ki animation overlay — enhanced */}
         {kiAnimation && (
           <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
-            <div className="w-32 h-32 rounded-full animate-ki-pulse" style={{
-              background: `radial-gradient(circle, ${character.color} 0%, transparent 70%)`
+            {/* Inner core */}
+            <div className="absolute w-20 h-20 rounded-full animate-ki-core" style={{
+              background: `radial-gradient(circle, white 0%, ${character.color} 40%, transparent 70%)`,
+              boxShadow: `0 0 40px ${character.color}, 0 0 80px ${character.color}`,
             }} />
+            {/* Mid ring */}
+            <div className="absolute w-40 h-40 rounded-full animate-ki-ring" style={{
+              border: `3px solid ${character.color}`,
+              boxShadow: `0 0 20px ${character.color}, inset 0 0 20px ${character.color}`,
+            }} />
+            {/* Outer ring */}
+            <div className="absolute w-64 h-64 rounded-full animate-ki-ring-outer" style={{
+              border: `2px solid ${character.color}`,
+              opacity: 0.4,
+            }} />
+            {/* Radial lines */}
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className="absolute animate-ki-ray"
+                style={{
+                  width: "2px",
+                  height: "120px",
+                  background: `linear-gradient(to top, ${character.color}, transparent)`,
+                  transformOrigin: "bottom center",
+                  transform: `rotate(${i * 45}deg) translateY(-60px)`,
+                  animationDelay: `${i * 0.05}s`,
+                }}
+              />
+            ))}
           </div>
         )}
 
@@ -150,7 +233,7 @@ const TriviaGame = () => {
         {showFeedback && (
           <button
             onClick={handleNext}
-            className="manga-btn bg-primary text-primary-foreground text-xl w-full py-4 mt-auto"
+            className="manga-btn bg-primary text-primary-foreground text-xl w-full py-4 mt-auto animate-fade-in"
           >
             {currentIndex + 1 >= questions.length ? "🏆 VER RESULTADOS" : "➡️ SIGUIENTE"}
           </button>
