@@ -1,7 +1,14 @@
+import gokuImg from "@/assets/characters/goku.png";
+import vegetaImg from "@/assets/characters/vegeta.png";
+import piccoloImg from "@/assets/characters/piccolo.png";
+import gohanImg from "@/assets/characters/gohan.png";
+import trunksImg from "@/assets/characters/trunks.png";
+import krillinImg from "@/assets/characters/krillin.png";
+
 export interface Character {
   id: string;
   name: string;
-  emoji: string;
+  image: string;
   color: string;
   bgClass: string;
   description: string;
@@ -15,7 +22,7 @@ export const characters: Character[] = [
   {
     id: "goku",
     name: "Goku",
-    emoji: "🟠",
+    image: gokuImg,
     color: "hsl(20 94% 54%)",
     bgClass: "bg-primary",
     description: "El guerrero Saiyajin más poderoso del universo",
@@ -27,7 +34,7 @@ export const characters: Character[] = [
   {
     id: "vegeta",
     name: "Vegeta",
-    emoji: "🔵",
+    image: vegetaImg,
     color: "hsl(215 100% 34%)",
     bgClass: "bg-secondary",
     description: "El Príncipe de los Saiyajins",
@@ -39,7 +46,7 @@ export const characters: Character[] = [
   {
     id: "piccolo",
     name: "Piccolo",
-    emoji: "🟢",
+    image: piccoloImg,
     color: "hsl(140 60% 35%)",
     bgClass: "bg-emerald-700",
     description: "El guerrero Namekiano, mentor de Gohan",
@@ -51,7 +58,7 @@ export const characters: Character[] = [
   {
     id: "gohan",
     name: "Gohan",
-    emoji: "📖",
+    image: gohanImg,
     color: "hsl(280 60% 50%)",
     bgClass: "bg-purple-600",
     description: "Hijo de Goku, guerrero y estudioso",
@@ -63,7 +70,7 @@ export const characters: Character[] = [
   {
     id: "trunks",
     name: "Trunks",
-    emoji: "⚔️",
+    image: trunksImg,
     color: "hsl(250 60% 55%)",
     bgClass: "bg-indigo-500",
     description: "El guerrero del futuro, hijo de Vegeta",
@@ -75,7 +82,7 @@ export const characters: Character[] = [
   {
     id: "krillin",
     name: "Krillin",
-    emoji: "👨‍🦲",
+    image: krillinImg,
     color: "hsl(35 90% 55%)",
     bgClass: "bg-amber-500",
     description: "El humano más fuerte de la Tierra",

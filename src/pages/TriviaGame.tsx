@@ -69,8 +69,9 @@ const TriviaGame = () => {
           >
             ✕ SALIR
           </button>
-          <div className="font-display text-lg text-foreground">
-            {character.emoji} {character.name}
+          <div className="font-display text-lg text-foreground flex items-center gap-2">
+            <img src={character.image} alt={character.name} className="w-8 h-8 object-contain" width={512} height={512} />
+            {character.name}
           </div>
           <div className="font-display text-lg text-primary">
             ⭐ {score}/{questions.length}

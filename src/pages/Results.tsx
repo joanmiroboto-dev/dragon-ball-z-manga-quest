@@ -53,7 +53,7 @@ const Results = () => {
           {/* Character message */}
           <div className="speech-bubble text-left mb-8">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-2xl">{character.emoji}</span>
+              <img src={character.image} alt={character.name} className="w-10 h-10 object-contain" width={512} height={512} />
               <span className="font-display text-lg">{character.name}:</span>
             </div>
             {character.finalPhrase}

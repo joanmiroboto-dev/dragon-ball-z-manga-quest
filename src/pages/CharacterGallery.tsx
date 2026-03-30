@@ -22,7 +22,7 @@ const CharacterGallery = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {characters.map((char) => (
             <div key={char.id} className="manga-card p-6 flex gap-4 items-center">
-              <div className="text-5xl md:text-6xl shrink-0">{char.emoji}</div>
+              <img src={char.image} alt={char.name} className="w-20 h-20 md:w-24 md:h-24 object-contain shrink-0" loading="lazy" width={512} height={512} />
               <div className="flex-1">
                 <h2 className="font-display text-2xl text-foreground">{char.name}</h2>
                 <p className="text-sm text-muted-foreground font-body mb-2">{char.description}</p>
