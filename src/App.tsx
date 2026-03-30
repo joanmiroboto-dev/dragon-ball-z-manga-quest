@@ -8,6 +8,7 @@ import CharacterSelect from "./pages/CharacterSelect.tsx";
 import CharacterGallery from "./pages/CharacterGallery.tsx";
 import TriviaGame from "./pages/TriviaGame.tsx";
 import Results from "./pages/Results.tsx";
+import Story from "./pages/Story.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/select" element={<CharacterSelect />} />
           <Route path="/characters" element={<CharacterGallery />} />
           <Route path="/trivia/:characterId" element={<TriviaGame />} />
+          <Route path="/story" element={<Story />} />
           <Route path="/results/:characterId/:score" element={<Results />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
