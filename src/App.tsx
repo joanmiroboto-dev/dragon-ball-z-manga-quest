@@ -29,6 +29,7 @@ const App = () => (
           <Route path="/results/:characterId/:score" element={<Results />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ChatBot />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
